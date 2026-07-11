@@ -1,0 +1,137 @@
+{
+  "name": "My workflow 12",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "e3beaf41-e4dc-4526-bb01-a9d7dd5b4e12",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "71613046-820b-4fa5-9b51-68d137fcf999",
+      "name": "Webhook",
+      "webhookId": "e3beaf41-e4dc-4526-bb01-a9d7dd5b4e12"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are an expert AI Lead Qualification Assistant. Your job is to analyze incoming business leads and categorize them.\n\nAnalyze the incoming data for:\n1. Company Size / Budget\n2. Problem Urgency\n\nRespond ONLY in the following valid JSON format:\n{\n  \"lead_score\": \"High\" or \"Medium\" or \"Low\",\n  \"reason\": \"A short 1-sentence reason why you gave this score.\"\n}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "666f7e7b-f58b-4237-8a25-51062a971555",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        176
+      ],
+      "id": "f64b2fb7-66c5-40a3-a8aa-fe0cfa645d3b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vUNtR3ASVwieAltj",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ee97aea0-0827-40d8-9030-640a4e9b0994",
+              "leftValue": "={{ $json.lead_score }}",
+              "rightValue": "High",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        560,
+        0
+      ],
+      "id": "8a82122d-774f-45b5-a4c6-23d6948c006f",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "53878ff2-15aa-4143-ae50-3248cc864056",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "76b0284800f70eb4e443933fb964b42bde29ade1b165630b0a870940432ca835"
+  },
+  "nodeGroups": [],
+  "id": "xXZXCGZv5Iy0IjkP",
+  "tags": []
+}
