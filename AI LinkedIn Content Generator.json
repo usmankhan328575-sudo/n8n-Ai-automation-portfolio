@@ -1,0 +1,147 @@
+{
+  "name": "AI LinkedIn Content Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3888ea2b-93d0-4f8d-a116-f566cd7a8ca5",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cd08faf0-ade1-40c2-8ec5-cb9ecac81cba",
+              "name": "topic",
+              "value": "Why businesses need to automate lead qualification in 2026.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "21a2e2da-440a-44ec-93d5-87c3adcfaa13",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Write a compelling LinkedIn post based on this topic: {{ $json.topic }}\n\nFollow this formatting structure:\n1. Start with a strong hook (first 1-2 lines) to stop users from scrolling.\n2. Break down 3 high-impact bullet points explaining the core value.\n3. Keep the sentences short and highly readable.\n4. Include 2-3 relevant hashtags (like #AIAutomation #n8n) at the very bottom.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        416,
+        0
+      ],
+      "id": "79367380-fef1-4f38-add3-7e84504ee1dc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        208
+      ],
+      "id": "6300c97c-269e-4907-9702-8550803f073c",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "vUNtR3ASVwieAltj",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.linkedIn",
+      "typeVersion": 1,
+      "position": [
+        768,
+        0
+      ],
+      "id": "1d9eb016-8e24-478b-bb21-5a5256692cf0",
+      "name": "Create a post"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Create a post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "c9da18b7-7167-4663-a011-2e4cc0f19cef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "76b0284800f70eb4e443933fb964b42bde29ade1b165630b0a870940432ca835"
+  },
+  "nodeGroups": [],
+  "id": "FhVc7Y0JC8Kp4wVj",
+  "tags": []
+}
